@@ -23,7 +23,9 @@
  #include "backward.h"
  #include "auxiliary.h"
  #include <cooperative_groups.h>
+ #ifndef __HIPCC__
  #include <cooperative_groups/reduce.h>
+ #endif
  namespace cg = cooperative_groups;
  
  
@@ -762,7 +764,7 @@
 	 // Propagate gradients for remaining steps: finish 3D mean gradients,
 	 // propagate color gradients to SH (if desireD), propagate 3D covariance
 	 // matrix gradients to scale and rotation.
-	 preprocessCUDA<NUM_CHANNELS> << < (P + 255) / 256, 256 >> > (
+	 preprocessCUDA<NUM_CHANNELS> <<<(P + 255) / 256, 256>>> (
 		 P, D, M,
 		 triangles_points,
 		 W, H,
@@ -820,7 +822,7 @@
 	 float* dL_dcolors,
 	 float* dL_dsigma_factor)
  {
-	 renderCUDA<NUM_CHANNELS> << <grid, block >> >(
+	 renderCUDA<NUM_CHANNELS><<<grid, block>>>(
 		 ranges,
 		 point_list,
 		 W, H,

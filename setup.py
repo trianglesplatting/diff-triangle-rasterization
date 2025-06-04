@@ -23,7 +23,13 @@
 from setuptools import setup
 from torch.utils.cpp_extension import CUDAExtension, BuildExtension
 import os
+import torch
 os.path.dirname(os.path.abspath(__file__))
+
+use_fast_math_flag = "--use_fast_math"
+if torch.version.hip is not None:
+    # hipcc (clang) does not recognize --use_fast_math; use clang's flag
+    use_fast_math_flag = "-ffast-math"
 
 setup(
     name="diff_triangle_rasterization",
@@ -38,7 +44,7 @@ setup(
             "cuda_rasterizer/utils.cu",
             "rasterize_points.cu",
             "ext.cpp"],
-            extra_compile_args={"nvcc": ["-I" + os.path.join(os.path.dirname(os.path.abspath(__file__)), "third_party/glm/"), "--use_fast_math"]})
+            extra_compile_args={"nvcc": ["-I" + os.path.join(os.path.dirname(os.path.abspath(__file__)), "third_party/glm/"), use_fast_math_flag]})
         ],
     cmdclass={
         'build_ext': BuildExtension
