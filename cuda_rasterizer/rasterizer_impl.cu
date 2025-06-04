@@ -27,14 +27,18 @@
  #include <numeric>
  #include <cuda.h>
  #include "cuda_runtime.h"
+ #ifndef __HIPCC__
  #include "device_launch_parameters.h"
+ #endif
  #include <cub/cub.cuh>
  #include <cub/device/device_radix_sort.cuh>
  #define GLM_FORCE_CUDA
  #include <glm/glm.hpp>
  
  #include <cooperative_groups.h>
+ #ifndef __HIPCC__
  #include <cooperative_groups/reduce.h>
+ #endif
  namespace cg = cooperative_groups;
  
  #include "auxiliary.h"
@@ -156,7 +160,7 @@
 	 float* projmatrix,
 	 bool* present)
  {
-	 checkFrustum << <(P + 255) / 256, 256 >> > (
+	 checkFrustum <<<(P + 255) / 256, 256>>> (
 		 P,
 		 means3D,
 		 viewmatrix, projmatrix,
@@ -320,7 +324,7 @@
  
 	 // For each instance to be rendered, produce adequate [ tile | depth ] key 
 	 // and corresponding dublicated Triangle indices to be sorted
-	 duplicateWithKeys << <(P + 255) / 256, 256 >> > (
+	 duplicateWithKeys<<<(P + 255) / 256, 256>>> (
 		 P,
 		 geomState.means2D,
 		 geomState.depths,
@@ -349,7 +353,7 @@
  
 	 // Identify start and end of per-tile workloads in sorted list
 	 if (num_rendered > 0)
-		 identifyTileRanges << <(num_rendered + 255) / 256, 256 >> > (
+		 identifyTileRanges <<<(num_rendered + 255) / 256, 256>>> (
 			 num_rendered,
 			 binningState.point_list_keys,
 			 imgState.ranges);

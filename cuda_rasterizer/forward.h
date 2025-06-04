@@ -25,7 +25,9 @@
  
  #include <cuda.h>
  #include "cuda_runtime.h"
+ #ifndef __HIPCC__
  #include "device_launch_parameters.h"
+ #endif
  #define GLM_FORCE_CUDA
  #include <glm/glm.hpp>
  

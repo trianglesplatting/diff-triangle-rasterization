@@ -220,7 +220,11 @@ __forceinline__ __device__ bool in_frustum(int idx,
 		if (prefiltered)
 		{
 			printf("Point is filtered although prefiltered is set. This shouldn't happen!");
-			__trap();
+			#if defined(__HIPCC__)
+				__builtin_trap();
+			#else
+				__trap();
+			#endif
 		}
 		return false;
 	}
@@ -255,7 +259,11 @@ __forceinline__ __device__ bool in_frustum_triangle(int idx,
 		if (prefiltered)
 		{
 			printf("Point is filtered although prefiltered is set. This shouldn't happen!");
-			__trap();
+			#if defined(__HIPCC__)
+				__builtin_trap();
+			#else
+				__trap();
+			#endif
 		}
 		return false;
 	}

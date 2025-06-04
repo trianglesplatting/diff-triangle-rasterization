@@ -23,7 +23,9 @@
  #include "forward.h"
  #include "auxiliary.h"
  #include <cooperative_groups.h>
+ #ifndef __HIPCC__
  #include <cooperative_groups/reduce.h>
+ #endif
  namespace cg = cooperative_groups;
  
  
@@ -646,7 +648,7 @@
 	 float* out_others,
 	float* max_blending)
  {
-	 renderCUDA<NUM_CHANNELS> << <grid, block >> > (
+	 renderCUDA<NUM_CHANNELS> <<<grid, block>>> (
 		 ranges,
 		 point_list,
 		 W, H,
@@ -704,7 +706,7 @@
 	 uint32_t* tiles_touched,
 	 bool prefiltered)
  {
-	 preprocessCUDA<NUM_CHANNELS> << <(P + 255) / 256, 256 >> > (
+	 preprocessCUDA<NUM_CHANNELS> <<<(P + 255) / 256, 256>>> (
 		 P, D, M,
 		 triangles_points,
 		 sigma,
