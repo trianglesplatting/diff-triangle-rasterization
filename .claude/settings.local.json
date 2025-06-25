@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python:*)",
+      "Bash(pip install:*)",
+      "Bash(mv:*)",
+      "Bash(git clone:*)"
+    ],
+    "deny": []
+  }
+}
